@@ -37,4 +37,4 @@ unset AWS_PROFILE  # optional, we'll explicitly pass it anyway
 
 This will ensure other AWS picks up the right 
 
-sample url: https://res.cloudinary.com/dbmataac4/image/upload/v1765486142/hejetwhirpzkzszu7ggm.jpg
+sample url: https://res.cloudinary.com/dbmataac4/image/upload/v1765486287/ghgewenoaznomnmsutrv.jpg
