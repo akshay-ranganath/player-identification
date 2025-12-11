@@ -38,3 +38,212 @@ unset AWS_PROFILE  # optional, we'll explicitly pass it anyway
 This will ensure other AWS picks up the right 
 
 sample url: https://res.cloudinary.com/dbmataac4/image/upload/v1765486287/ghgewenoaznomnmsutrv.jpg
+
+
+Sample JSON from LLM
+
+```json
+{
+  "image_analysis": {
+    "total_players_visible": 4,
+    "image_quality": "good",
+    "viewing_angle": "front"
+  },
+  "players": [
+    {
+      "player_id": 1,
+      "jersey_number": {
+        "value": "7",
+        "confidence": "high"
+      },
+      "team": {
+        "name": "Saskatchewan Roughriders",
+        "colors_visible": ["green", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Quarterback",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Jersey number 7 clearly visible",
+        "Saskatchewan Roughriders team name and logo on jersey",
+        "Standing upright in typical quarterback stance"
+      ],
+      "bounding_box": {
+        "description": "center foreground"
+      },
+      "overall_confidence": "high"
+    },
+    {
+      "player_id": 2,
+      "team": {
+        "name": "Saskatchewan Roughriders",
+        "colors_visible": ["green", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Offensive Lineman",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Wearing Saskatchewan Roughriders uniform",
+        "Large frame typical of offensive lineman",
+        "In stance blocking for the quarterback"
+      ],
+      "distinctive_features": null,
+      "bounding_box": {
+        "description": "left foreground"
+      },
+      "overall_confidence": "medium"
+    },
+    {
+      "player_id": 3,
+      "team": {
+        "name": "Opposing Team",
+        "colors_visible": ["red", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Defensive Lineman",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Different uniform colors from Saskatchewan players",
+        "Crouched stance facing offensive line"
+      ],
+      "bounding_box": {
+        "description": "bottom center"
+      },
+      "overall_confidence": "medium"
+    },
+    {
+      "player_id": 4,
+      "team": {
+        "name": "Opposing Team",
+        "colors_visible": ["red", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Linebacker",
+        "confidence": "low"
+      },
+      "visual_evidence": [
+        "Wearing same uniform as player 3"
+      ],
+      "bounding_box": {
+        "description": "right foreground"
+      },
+      "overall_confidence": "low"
+    }
+  ],
+  "context": {
+    "game_situation": "Offensive play with quarterback in shotgun formation",
+    "stadium": "Unknown",
+    "approximate_date": "Unknown",
+    "additional_notes": null
+  }
+}
+
+{
+  "image_analysis": {
+    "total_players_visible": 4,
+    "image_quality": "good",
+    "viewing_angle": "front"
+  },
+  "players": [
+    {
+      "player_id": 1,
+      "jersey_number": {
+        "value": "7",
+        "confidence": "high"
+      },
+      "team": {
+        "name": "Saskatchewan Roughriders",
+        "colors_visible": ["green", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Quarterback",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Jersey number 7 clearly visible",
+        "Saskatchewan Roughriders team name and logo on jersey",
+        "Standing upright in typical quarterback stance"
+      ],
+      "bounding_box": {
+        "description": "center foreground"
+      },
+      "overall_confidence": "high"
+    },
+    {
+      "player_id": 2,
+      "team": {
+        "name": "Saskatchewan Roughriders",
+        "colors_visible": ["green", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Offensive Lineman",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Wearing Saskatchewan Roughriders uniform",
+        "Large frame typical of offensive lineman",
+        "In stance blocking for the quarterback"
+      ],
+      "distinctive_features": null,
+      "bounding_box": {
+        "description": "left foreground"
+      },
+      "overall_confidence": "medium"
+    },
+    {
+      "player_id": 3,
+      "team": {
+        "name": "Opposing Team",
+        "colors_visible": ["red", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Defensive Lineman",
+        "confidence": "medium"
+      },
+      "visual_evidence": [
+        "Different uniform colors from Saskatchewan players",
+        "Crouched stance facing offensive line"
+      ],
+      "bounding_box": {
+        "description": "bottom center"
+      },
+      "overall_confidence": "medium"
+    },
+    {
+      "player_id": 4,
+      "team": {
+        "name": "Opposing Team",
+        "colors_visible": ["red", "white"],
+        "confidence": "high"
+      },
+      "position": {
+        "value": "Linebacker",
+        "confidence": "low"
+      },
+      "visual_evidence": [
+        "Wearing same uniform as player 3"
+      ],
+      "bounding_box": {
+        "description": "right foreground"
+      },
+      "overall_confidence": "low"
+    }
+  ],
+  "context": {
+    "game_situation": "Offensive play with quarterback in shotgun formation",
+    "stadium": "Unknown",
+    "approximate_date": "Unknown",
+    "additional_notes": null
+  }
+}
+```
