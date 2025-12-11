@@ -73,6 +73,7 @@ def filter_high_confidence_players(result):
 def verify_players_in_database(filtered_players, player_data):
     """
     Verify that filtered players exist in the player database.
+    Fill in player name from database if it's Unknown.
 
     Args:
         filtered_players (list): List of player dicts from filter_high_confidence_players
@@ -86,6 +87,7 @@ def verify_players_in_database(filtered_players, player_data):
     for player in filtered_players:
         team = player.get("player_team")
         number = player.get("player_number")
+        name = player.get("player_name")
 
         # Skip if essential fields are Unknown or None
         if not team or team == "Unknown" or not number or number == "Unknown":
@@ -93,7 +95,21 @@ def verify_players_in_database(filtered_players, player_data):
 
         # Verify team and number exist in database
         if team in player_data and str(number) in player_data[team]:
-            verified_players.append(player)
+            db_name = player_data[team][str(number)]
+
+            # Handle case where multiple players have same number (list)
+            if isinstance(db_name, list):
+                db_name = db_name[0]  # Take first match
+
+            # If name is Unknown, use database name
+            if name == "Unknown" or not name:
+                name = db_name
+
+            verified_players.append({
+                "player_name": name,
+                "player_team": team,
+                "player_number": str(number)
+            })
 
     return verified_players
 
