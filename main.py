@@ -3,6 +3,99 @@ import requests
 import os
 from pathlib import Path
 from datetime import datetime
+from .utils import get_player_details
+
+
+def filter_high_confidence_players(result):
+    """
+    Filter players from get_player_details result that have at least two parameters with high confidence.
+
+    Args:
+        result (dict): Result from get_player_details containing players data
+
+    Returns:
+        list: List of dictionaries with player_name, player_team, and player_number
+    """
+    filtered_players = []
+
+    # Handle error case
+    if "error" in result:
+        return filtered_players
+
+    # Get players from result
+    players = result.get("players", [])
+
+    for player in players:
+        high_confidence_count = 0
+        player_info = {
+            "player_name": None,
+            "player_team": None,
+            "player_number": None
+        }
+
+        # Check name confidence
+        if "name" in player and player["name"].get("confidence") == "high":
+            high_confidence_count += 1
+            player_info["player_name"] = player["name"].get("value")
+
+        # Check jersey number confidence
+        if "jersey_number" in player and player["jersey_number"].get("confidence") == "high":
+            high_confidence_count += 1
+            player_info["player_number"] = player["jersey_number"].get("value")
+
+        # Check team confidence
+        if "team" in player and player["team"].get("confidence") == "high":
+            high_confidence_count += 1
+            player_info["player_team"] = player["team"].get("name")
+
+        # Only include if at least 2 parameters have high confidence
+        if high_confidence_count >= 2:
+            # Fill in missing values with data from lower confidence or "Unknown"
+            if player_info["player_name"] is None:
+                player_info["player_name"] = player.get("name", {}).get("value", "Unknown")
+
+            if player_info["player_number"] is None:
+                player_info["player_number"] = player.get("jersey_number", {}).get("value", "Unknown")
+
+            if player_info["player_team"] is None:
+                player_info["player_team"] = player.get("team", {}).get("name", "Unknown")
+
+            # Only append the three fields
+            filtered_players.append({
+                "player_name": player_info["player_name"],
+                "player_team": player_info["player_team"],
+                "player_number": player_info["player_number"]
+            })
+
+    return filtered_players
+
+
+def verify_players_in_database(filtered_players, player_data):
+    """
+    Verify that filtered players exist in the player database.
+
+    Args:
+        filtered_players (list): List of player dicts from filter_high_confidence_players
+        player_data (dict): Player database organized by team -> number -> player name(s)
+
+    Returns:
+        list: List of verified player dictionaries that exist in the database
+    """
+    verified_players = []
+
+    for player in filtered_players:
+        team = player.get("player_team")
+        number = player.get("player_number")
+
+        # Skip if essential fields are Unknown or None
+        if not team or team == "Unknown" or not number or number == "Unknown":
+            continue
+
+        # Verify team and number exist in database
+        if team in player_data and str(number) in player_data[team]:
+            verified_players.append(player)
+
+    return verified_players
 
 
 def download_image(url):
@@ -78,12 +171,27 @@ def main():
     # Download and save the image
     temp_image_path = download_image(image_url)
 
-    if temp_image_path:
-        print(f"Temporary image path: {temp_image_path}")
-        # Add your image processing logic here
-        # player_data is available for player identification
-    else:
+    if not temp_image_path:
         print("Failed to download image")
+        return
+
+    print(f"Temporary image path: {temp_image_path}")
+
+    # Get player details from image
+    result = get_player_details(temp_image_path)
+
+    # Filter high confidence players
+    filtered_players = filter_high_confidence_players(result)
+
+    # Verify players exist in database
+    verified_players = verify_players_in_database(filtered_players, player_data)
+
+    # Output results as JSON
+    print("\n" + "="*50)
+    print("Identified Players:")
+    print("="*50)
+    print(json.dumps(verified_players, indent=2))
+    
 
 
 if __name__ == "__main__":
